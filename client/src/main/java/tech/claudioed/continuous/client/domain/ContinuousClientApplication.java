@@ -35,7 +35,7 @@ public class ContinuousClientApplication implements CommandLineRunner {
 
     }).subscribe();
 
-    Flux.interval(Duration.ofSeconds(1)).flatMap(value ->{
+    Flux.interval(Duration.ofMillis(10)).flatMap(value ->{
       final int device = 1 + (int)(Math.random() * ((5 - 1) + 1));
       final int temp = device + (int)(Math.random() * (((device + 10) - device) + 1));
 
@@ -46,7 +46,7 @@ public class ContinuousClientApplication implements CommandLineRunner {
 
     }).subscribe();
 
-    Flux.interval(Duration.ofSeconds(3)).flatMap(value ->{
+    Flux.interval(Duration.ofMillis(10)).flatMap(value ->{
       final int device = 1 + (int)(Math.random() * ((5 - 1) + 1));
       final int temp = device + (int)(Math.random() * (((device + 10) - device) + 1)) + 10;
 
@@ -57,12 +57,23 @@ public class ContinuousClientApplication implements CommandLineRunner {
 
     }).subscribe();
 
-    Flux.interval(Duration.ofSeconds(6)).flatMap(value ->{
+    Flux.interval(Duration.ofMillis(10)).flatMap(value ->{
       final int device = 1 + (int)(Math.random() * ((5 - 1) + 1));
       final int temp = device + (int)(Math.random() * (((device + 10) - device) + 1)) - 50;
 
       final TemperatureRequest temperatureRequest = TemperatureRequest.builder().deviceId(String.valueOf(device))
-          .value(BigDecimal.valueOf(temp)).build();
+              .value(BigDecimal.valueOf(temp)).build();
+      return temperatureClient.post().body(BodyInserters.fromObject(temperatureRequest)).exchange();
+
+
+    }).subscribe();
+
+    Flux.interval(Duration.ofMillis(10)).flatMap(value ->{
+      final int device = 1 + (int)(Math.random() * ((5 - 1) + 1));
+      final int temp = device + (int)(Math.random() * (((device + 10) - device) + 1)) - 50;
+
+      final TemperatureRequest temperatureRequest = TemperatureRequest.builder().deviceId(String.valueOf(device))
+              .value(BigDecimal.valueOf(temp)).build();
       return temperatureClient.post().body(BodyInserters.fromObject(temperatureRequest)).exchange();
 
 

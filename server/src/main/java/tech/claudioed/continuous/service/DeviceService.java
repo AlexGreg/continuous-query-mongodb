@@ -30,11 +30,21 @@ public class DeviceService {
 
   @PostConstruct
   public void init(){
-    reactiveMongoTemplate.dropCollection("temperatures").then(reactiveMongoTemplate.createCollection("temperatures", CollectionOptions.empty().capped().size(2048).maxDocuments(10000))).subscribe();
+    reactiveMongoTemplate.dropCollection("temperatures")
+            .then(reactiveMongoTemplate.createCollection("temperatures", CollectionOptions.empty().capped().size(3221225472L)))
+            .subscribe();
   }
 
   public Flux<Temperature> streamFromDevice(String id){
     return this.temperatureRepository.findByDeviceId(id);
+  }
+
+  public Flux<Temperature> streamJavaForDevice(String id) {
+    return this.temperatureRepository.findAll().filter(temperature -> temperature.getDevice().getId().equals(id)||id==null);
+  }
+
+  public Flux<Temperature> streamAll() {
+    return this.temperatureRepository.findWithTailableCursorBy();
   }
 
   public Mono<Device> newDevice(Device device){

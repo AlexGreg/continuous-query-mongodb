@@ -16,4 +16,7 @@ public interface TemperatureRepository extends ReactiveCrudRepository<Temperatur
   @Tailable
   Flux<Temperature> findByDeviceIdAndValueLessThan(String deviceId,Double value);
 
+  @Tailable
+  Flux<Temperature> findWithTailableCursorBy();
+
 }
